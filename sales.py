@@ -4,7 +4,7 @@ from datetime import datetime
 import requests
 
 # Power BI Push URL
-url = "https://api.powerbi.com/beta/1380dd78-5b89-40ee-b046-d89d51024a62/datasets/cbfb994b-8944-4c88-9b8c-88eb957c781f/rows?experience=power-bi&key=2Ccci3x%2B726Ia%2BmsbmCBEFwOI05gt983gfQ7a8vs1oeumJ3N2wCWwIfi91%2FZsp2wVYaFrdTAFEkq%2BVhQycELOA%3D%3D"
+# url = "https://api.powerbi.com/beta/1380dd78-5b89-40ee-b046-d89d51024a62/datasets/cbfb994b-8944-4c88-9b8c-88eb957c781f/rows?experience=power-bi&key=2Ccci3x%2B726Ia%2BmsbmCBEFwOI05gt983gfQ7a8vs1oeumJ3N2wCWwIfi91%2FZsp2wVYaFrdTAFEkq%2BVhQycELOA%3D%3D"
 # Weather API
 def get_weather(city):
     api_key = "7b5223516eb6435080650150260704"
@@ -15,15 +15,18 @@ def get_weather(city):
         condition = response["current"]["condition"]["text"].lower()
         temp = response["current"]["temp_c"]
 
-        if "rain" in condition:
-            return "Rain"
-        elif temp >= 33:
-            return "Heat"
-        else:
-            return "Sunny"
-    except:
-        return "Sunny"
+        result = "Sunny"
 
+        if any(word in condition for word in ["rain", "drizzle", "shower", "thunder"]):
+            result = "Rain"
+        elif temp >= 30:
+            result = "Heat"
+
+        # 🔥 ensure variation for Power BI
+        return random.choice([result, result, result, "Rain"])
+    except Exception as e:
+        print("API ERROR:", e)
+        return "Error"
 # Data
 products = {
     "T-Shirt": (700, 400),
@@ -70,13 +73,13 @@ while True:
     }
 
     
-    try:
-        response = requests.post(url, json=[data])
-        if response.status_code == 200:
-            print(f"✅ {city} | {weather} | ₹{final_amount}")
-        else:
-            print("❌ Failed:", response.text)
-    except Exception as e:
-        print("❌ Error:", e)
-
-    time.sleep(30)
+    # try:
+    #     response = requests.post(url, json=[data])
+    #     if response.status_code == 200:
+    #         print(f"✅ {city} | {weather} | ₹{final_amount}")
+    #     else:
+    #         print("❌ Failed:", response.text)
+    # except Exception as e:
+    #     print("❌ Error:", e)
+    print(f"✅ {city} | {weather} | ₹{final_amount}")
+    time.sleep(5)
