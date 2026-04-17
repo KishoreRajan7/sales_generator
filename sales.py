@@ -82,4 +82,4 @@ while True:
     # except Exception as e:
     #     print("❌ Error:", e)
     print(f"✅ {city} | {weather} | ₹{final_amount}")
-    time.sleep(5)
+    time.sleep(30)
